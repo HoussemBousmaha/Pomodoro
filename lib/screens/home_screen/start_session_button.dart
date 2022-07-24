@@ -10,7 +10,18 @@ class StartSessionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed(SessionScreen.routeName);
+        Navigator.of(context).push(
+          PageRouteBuilder(
+            pageBuilder: (BuildContext context, _, __) => const SessionScreen(),
+            transitionsBuilder: (
+              _,
+              Animation<double> animation,
+              __,
+              Widget child,
+            ) =>
+                FadeTransition(opacity: animation, child: child),
+          ),
+        );
       },
       child: Container(
         height: 40,
