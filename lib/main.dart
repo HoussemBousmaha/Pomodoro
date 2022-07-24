@@ -130,7 +130,8 @@ class Clock extends StatefulWidget {
 }
 
 class _ClockState extends State<Clock> {
-  double angle = 0;
+  double angle = math.pi * 5 / 6;
+  int time = 25;
 
   @override
   Widget build(BuildContext context) {
@@ -149,6 +150,8 @@ class _ClockState extends State<Clock> {
           }
 
           angle += math.pi * .5;
+
+          time = 30 * angle ~/ math.pi;
         });
       },
       child: Container(
@@ -166,7 +169,7 @@ class _ClockState extends State<Clock> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  '25',
+                  '$time',
                   style: TextStyle(
                     fontSize: 40,
                     color: Colors.grey.shade700,
