@@ -35,11 +35,12 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Color(0xFFA65D5E),
-            Color(0xFFA65D5E),
+            const Color(0xFFA65D5E),
+            Colors.pink.shade300,
+            const Color(0xFFA65D5E),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -133,24 +134,30 @@ class _ClockState extends State<Clock> {
   double angle = math.pi * 5 / 6;
   int time = 25;
 
+  void getAngle(DragUpdateDetails details) {
+    final position = details.localPosition;
+    final x = (position.dx - 150);
+    final y = (position.dy - 150);
+    final tan = y / x;
+    angle = math.atan(tan);
+    if (x <= 0 && y <= 0) {
+      angle += math.pi;
+    } else if (y >= 0 && x <= 0) {
+      angle += math.pi;
+    }
+
+    angle += math.pi * .5;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onPanUpdate: (details) {
         setState(() {
-          final position = details.localPosition;
-          final x = (position.dx - 150);
-          final y = (position.dy - 150);
-          final tan = y / x;
-          angle = math.atan(tan);
-          if (x <= 0 && y <= 0) {
-            angle += math.pi;
-          } else if (y >= 0 && x <= 0) {
-            angle += math.pi;
-          }
+          // getting the angle from the gesture.
+          getAngle(details);
 
-          angle += math.pi * .5;
-
+          // converting the angle to correct time in minutes.
           time = 30 * angle ~/ math.pi;
         });
       },
@@ -196,20 +203,27 @@ class ClockPainter extends CustomPainter {
     canvas.translate(size.width / 2, size.width / 2);
     const textStyle = TextStyle(color: Colors.black, fontSize: 15);
     final paint = Paint()
-      ..color = Colors.pink
+      ..color = Colors.pink.shade200
       ..style = PaintingStyle.stroke
       ..strokeWidth = 20
       ..strokeCap = StrokeCap.round;
 
     final greyCirclePaint = Paint()..color = Colors.grey.shade300;
     final whiteCirclePaint = Paint()..color = Colors.white;
+    final pinkCirclePaint = Paint()..color = Colors.pink;
 
+    // draw two Big circles in the middle
     canvas.drawCircle(const Offset(0, 0), size.height / 2, greyCirclePaint);
     canvas.drawCircle(const Offset(0, 0), size.height / 2 - 20, whiteCirclePaint);
 
     // Drawing the clock
     drawClockTimes(textStyle, size, canvas);
 
+    // Drawing the minutes arc
+    drawArc(canvas, size, paint, pinkCirclePaint);
+  }
+
+  void drawArc(Canvas canvas, Size size, Paint paint, Paint pinkCirclePaint) {
     canvas.drawArc(
       Rect.fromCenter(
         center: const Offset(0, 0),
@@ -220,6 +234,16 @@ class ClockPainter extends CustomPainter {
       angle,
       false,
       paint,
+    );
+
+    final x = 140 * math.cos(angle - math.pi / 2);
+    final y = 140 * math.sin(angle - math.pi / 2);
+    final position = Offset(x, y);
+
+    canvas.drawCircle(
+      position,
+      20,
+      pinkCirclePaint,
     );
   }
 
