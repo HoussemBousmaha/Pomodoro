@@ -13,19 +13,21 @@ class _ClockState extends State<Clock> {
   double angle = math.pi * 5 / 6;
   int time = 25;
 
-  void getAngle(DragUpdateDetails details) {
+  double getAngle(DragUpdateDetails details) {
     final position = details.localPosition;
     final x = (position.dx - 150);
     final y = (position.dy - 150);
     final tan = y / x;
-    angle = math.atan(tan);
+    double alpha = math.atan(tan);
     if (x <= 0 && y <= 0) {
-      angle += math.pi;
+      alpha += math.pi;
     } else if (y >= 0 && x <= 0) {
-      angle += math.pi;
+      alpha += math.pi;
     }
 
-    angle += math.pi * .5;
+    alpha += math.pi * .5;
+
+    return alpha;
   }
 
   @override
@@ -34,10 +36,21 @@ class _ClockState extends State<Clock> {
       onPanUpdate: (details) {
         setState(() {
           // getting the angle from the gesture.
-          getAngle(details);
+          angle = getAngle(details);
 
-          // converting the angle to correct time in minutes.
-          time = 30 * angle ~/ math.pi;
+          if (angle < math.pi / 6) {
+            time = 5;
+          } else {
+            // converting the angle to correct time in minutes.
+            time = 30 * angle ~/ math.pi;
+          }
+        });
+      },
+      onPanEnd: (details) {
+        setState(() {
+          if (angle < math.pi / 6) {
+            angle = math.pi / 6;
+          }
         });
       },
       child: CustomPaint(
