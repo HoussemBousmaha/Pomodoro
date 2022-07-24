@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tomatoro/screens/home_screen/home_screen.dart';
+import 'package:tomatoro/screens/session_screen/session_screen.dart';
 import 'package:window_size/window_size.dart';
 
 void main() {
@@ -25,6 +26,9 @@ class Tomatoro extends StatelessWidget {
       theme: ThemeData(
         textTheme: GoogleFonts.openSansTextTheme(),
       ),
+      routes: {
+        SessionScreen.routeName: (context) => const SessionScreen(),
+      },
     );
   }
 }

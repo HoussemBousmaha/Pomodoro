@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tomatoro/screens/home_screen/clock.dart';
+import 'package:tomatoro/screens/home_screen/start_session_button.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -30,37 +31,7 @@ class HomeScreen extends StatelessWidget {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(
-                    height: 40,
-                    width: 170,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF55A11F),
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 5,
-                          spreadRadius: 1,
-                        ),
-                      ],
-                    ),
-                    alignment: Alignment.center,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        Icon(Icons.fast_forward, color: Colors.white),
-                        SizedBox(width: 10),
-                        Text(
-                          'Start',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 17,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  const StartSessionButton(),
                   const SizedBox(width: 10),
                   Container(
                     height: 40,
