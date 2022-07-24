@@ -1,8 +1,8 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tomatoro/providers.dart';
 import 'package:tomatoro/screens/home_screen/clock_painter.dart';
-import 'package:tomatoro/screens/session_screen/session_screen.dart';
 
 class Clock extends StatefulWidget {
   const Clock({Key? key}) : super(key: key);
