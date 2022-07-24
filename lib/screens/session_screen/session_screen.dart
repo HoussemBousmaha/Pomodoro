@@ -2,16 +2,22 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class SessionScreen extends HookWidget {
+final sessionTimeProvider = StateProvider<int>((ref) {
+  return 25;
+});
+
+class SessionScreen extends HookConsumerWidget {
   const SessionScreen({Key? key}) : super(key: key);
 
   static const routeName = '/session-screen/';
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final time = ref.watch(sessionTimeProvider);
     final controller = useAnimationController(
-      duration: const Duration(seconds: 10),
+      duration: Duration(minutes: time),
     );
 
     final angle = useState<double>(0);
@@ -69,11 +75,13 @@ class TimePassingPainter extends CustomPainter {
     Paint paint = Paint()..color = const Color(0xFF724246);
 
     canvas.translate(size.width / 2, size.height / 2);
+
+    final radius = 2 * math.max(size.height, size.width).toDouble();
     canvas.drawArc(
       Rect.fromCenter(
         center: center,
-        width: size.height * 2,
-        height: size.height * 2,
+        width: radius,
+        height: radius,
       ),
       -math.pi / 2,
       math.pi * angle / 180,

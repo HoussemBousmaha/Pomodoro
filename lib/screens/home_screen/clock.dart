@@ -1,6 +1,8 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tomatoro/screens/home_screen/clock_painter.dart';
+import 'package:tomatoro/screens/session_screen/session_screen.dart';
 
 class Clock extends StatefulWidget {
   const Clock({Key? key}) : super(key: key);
@@ -32,50 +34,56 @@ class _ClockState extends State<Clock> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onPanUpdate: (details) {
-        setState(() {
-          // getting the angle from the gesture.
-          angle = getAngle(details);
+    return Consumer(
+      builder: (context, ref, child) {
+        return GestureDetector(
+          onPanUpdate: (details) {
+            setState(() {
+              // getting the angle from the gesture.
+              angle = getAngle(details);
 
-          if (angle < math.pi / 6) {
-            time = 5;
-          } else {
-            // converting the angle to correct time in minutes.
-            time = 30 * angle ~/ math.pi;
-          }
-        });
-      },
-      onPanEnd: (details) {
-        setState(() {
-          if (angle < math.pi / 6) {
-            angle = math.pi / 6;
-          }
-        });
-      },
-      child: CustomPaint(
-        size: const Size(300, 300),
-        painter: ClockPainter(angle: angle),
-        child: Container(
-          height: 300,
-          width: 300,
-          alignment: Alignment.center,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                '$time',
-                style: TextStyle(
-                  fontSize: 40,
-                  color: Colors.grey.shade700,
-                  fontWeight: FontWeight.w600,
-                ),
+              if (angle < math.pi / 6) {
+                time = 5;
+                ref.read(sessionTimeProvider.notifier).state = 5;
+              } else {
+                // converting the angle to correct time in minutes.
+                time = 30 * angle ~/ math.pi;
+                ref.read(sessionTimeProvider.notifier).state = 30 * angle ~/ math.pi;
+              }
+            });
+          },
+          onPanEnd: (details) {
+            setState(() {
+              if (angle < math.pi / 6) {
+                angle = math.pi / 6;
+              }
+            });
+          },
+          child: CustomPaint(
+            size: const Size(300, 300),
+            painter: ClockPainter(angle: angle),
+            child: Container(
+              height: 300,
+              width: 300,
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '$time',
+                    style: TextStyle(
+                      fontSize: 40,
+                      color: Colors.grey.shade700,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const Text('min.'),
+                ],
               ),
-              const Text('min.'),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
